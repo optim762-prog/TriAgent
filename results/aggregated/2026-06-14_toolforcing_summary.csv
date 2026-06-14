@@ -1,0 +1,4 @@
+backbone,ablation,n,diagnosis_ok,substance_ok,dose_ok,tools_ok,gateway_ok,escalation_ok,overall,mean_latency_s,mean_cost_usd,escalation_rate
+deepseek-chat,full,100,0.91,0.76,0.15,1.0,1.0,0.94,0.7933,24.6312,0.1679,0.06
+gemma4-local,full,100,0.97,0.85,0.26,0.99,1.0,0.97,0.84,78.442,0.0,0.03
+qwen-local,full,100,0.97,0.86,0.23,1.0,1.0,1.0,0.8433,76.9344,0.0,0.0
