@@ -119,6 +119,17 @@ docker compose -f docker-compose.yml run --rm triagent-runner \
 | qwen-local    | no_knowledge + skip | ✅ done      | `2026-06-12_fullsystem/qwen-local__no_knowledge_skipprefetch__n100`    |
 | qwen-local    | full + skip         | ✅ done      | `2026-06-12_fullsystem/qwen-local__full_skipprefetch__n100`            |
 
+### Monolithic baseline — single-shot LLM comparison (2026-06-15)
+
+Dataset: `instances.jsonl`. No FAISS, no ReAct, no agents. One prompt per instance.
+Script: `infra/run_monolithic.sh` (Gemma4 + DeepSeek), `infra/run_monolithic_qwen.sh` (Qwen).
+
+| Backbone      | Status  | Folder                                                  |
+| ------------- | ------- | ------------------------------------------------------- |
+| gemma4-local  | ✅ done | `2026-06-15_monolithic/gemma4-local__monolithic__n100`  |
+| deepseek-chat | ✅ done | `2026-06-15_monolithic/deepseek-chat__monolithic__n100` |
+| qwen-local    | ✅ done | `2026-06-15_monolithic/qwen-local__monolithic__n100`    |
+
 ### Tool-forcing — dedicated tool invocation evaluation (2026-06-14)
 
 Dataset: `tool_forcing_instances_n100.jsonl` — weather absent from descriptions.
@@ -169,6 +180,19 @@ Tool invocation validated separately on tool-forcing dataset (see below).
 | gemma4-local  | no_knowledge+skip | 0.405     | 0.970 | 0.140     | 0.040 | 0.290   | −0.005     |
 | deepseek-chat | no_knowledge+skip | 0.377     | 0.950 | 0.270     | 0.010 | 0.090   | —          |
 
+### Monolithic baseline results (n=100, 2026-06-15)
+
+`gateway_ok = 0.000` and `tools_ok = 0.000` for all models by construction.
+
+| Backbone      | Overall | Diag  | Substance | Dose  | Gateway | Esc rate |
+| ------------- | ------- | ----- | --------- | ----- | ------- | -------- |
+| deepseek-chat | 0.495   | 1.000 | 0.630     | 0.340 | 0.000   | 0.00     |
+| gemma4-local  | 0.423   | 1.000 | 0.520     | 0.020 | 0.000   | 0.00     |
+| qwen-local    | 0.423   | 1.000 | 0.520     | 0.020 | 0.000   | 0.00     |
+
+**vs TriAgent Full+skip (same dataset):** gateway 0.40–0.51 vs 0.000 — structural differentiator.
+Qwen/Gemma4: TriAgent overall higher (+0.062/+0.065). DeepSeek: monolithic higher (−0.062, prompt effect).
+
 ### Tool-forcing — dedicated tool invocation evaluation (n=100, 2026-06-14)
 
 Dataset: `tool_forcing_instances_n100.jsonl`. Ablation: `full + --skip-prefetch`.
@@ -216,11 +240,15 @@ Cloud inference speed ≠ structured reasoning capability.
 **F7 — Tool calling confirmed on tool-forcing dataset (n=100, 2026-06-14).**
 On 100 instances with weather absent from descriptions, all three models invoke `get_weather`
 via `requires_tool: true`: Qwen 100/100, DeepSeek 100/100, Gemma4 99/100 (tools_ok 1.00/1.00/0.99).
-Overall scores rise to 0.843/0.793/0.840 vs 0.485/0.433/0.488 on production dataset, primarily
-because tools_ok flips from 0.0 to ~1.0 (1/6 of overall). This isolates the production
-tools_ok=0.0 as a dataset artifact (embedded weather) rather than a system failure.
-`dose_ok` remains low (0.15–0.26): models recommending "monitor" (agronomically correct when
-live weather shows LOW risk) produce no specific L/ha value to match against GT range.
+Overall scores rise to 0.843/0.793/0.840 vs 0.485/0.433/0.488 on production dataset.
+
+**F8 — Monolithic baseline confirms gateway as the structural differentiator (n=100, 2026-06-15).**
+Single-shot LLM achieves gateway_ok = 0.000 across all three backbones on the production dataset.
+TriAgent Full achieves 0.400–0.510 gateway accuracy on the same dataset, validating Theorem 1.
+Monolithic yields higher substance (0.52–0.63 vs 0.23–0.29) due to direct prompt format.
+DeepSeek monolithic overall (0.495) > TriAgent (0.433); Qwen/Gemma4 reversed (+0.062/+0.065).
+Key finding: overall score alone is misleading — gateway is the dimension that demonstrates
+structural process automation capability. Monolithic is constitutively zero on this metric.
 
 ---
 
