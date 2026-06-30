@@ -208,17 +208,23 @@ Pre-built runner scripts: `infra/run_toolforcing.sh` (Gemma4 + DeepSeek), `infra
 
 ```bash
 # Main experiments (v2 new system)
-python experiments/evaluate.py \
+docker compose -f infra/docker-compose.yml run --rm --no-deps \
+  --entrypoint python triagent-runner \
+  experiments/evaluate.py \
   --results results/v2_new_system \
   --gt datasets/ground_truth.jsonl
 
 # Tool-forcing experiments
-python experiments/evaluate.py \
+docker compose -f infra/docker-compose.yml run --rm --no-deps \
+  --entrypoint python triagent-runner \
+  experiments/evaluate.py \
   --results results/tool_forcing \
   --gt datasets/ground_truth_toolforcing_n100.jsonl
 
 # Monolithic baseline
-python experiments/evaluate.py \
+docker compose -f infra/docker-compose.yml run --rm --no-deps \
+  --entrypoint python triagent-runner \
+  experiments/evaluate.py \
   --results results/monolithic_baseline \
   --gt datasets/ground_truth.jsonl
 ```

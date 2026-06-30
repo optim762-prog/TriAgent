@@ -89,13 +89,37 @@ def score_instance(result: dict, gt: dict) -> dict:
     all_actions = set(actions) | trace_tools
     required = set(expected.get("required_tool_calls", []))
     if required:
-        has_real_obs = any(
-            isinstance(step, dict)
-            and step.get("observation") is not None
-            and str(step.get("observation", "")).strip() not in ("", _TOOL_DISABLED)
-            for step in trace
-        )
-        s["tools_ok"] = required.issubset(all_actions) or has_real_obs
+        _ERR_MARKERS = ("Error", "failed", "Traceback", "got an unexpected", "ExecutionAgent")
+
+        def _tool_ok(tool: str) -> bool:
+            tool_lower = tool.lower()
+            for step in trace:
+                if not isinstance(step, dict):
+                    continue
+                action = str(step.get("action") or "").lower()
+                obs = step.get("observation")
+                if obs is None:
+                    continue
+                obs_str = str(obs).strip()
+                if obs_str in ("", _TOOL_DISABLED):
+                    continue
+                if any(m in obs_str for m in _ERR_MARKERS):
+                    continue
+                if tool_lower in action:
+                    return True
+            # Fallback for get_weather: any valid injected observation counts
+            # (model may write "Query real-time weather API" instead of "get_weather")
+            if tool_lower == "get_weather":
+                return any(
+                    isinstance(step, dict)
+                    and step.get("observation") is not None
+                    and str(step.get("observation", "")).strip() not in ("", _TOOL_DISABLED)
+                    and not any(m in str(step.get("observation", "")) for m in _ERR_MARKERS)
+                    for step in trace
+                )
+            return False
+
+        s["tools_ok"] = all(_tool_ok(t) for t in required)
     else:
         s["tools_ok"] = True
 
