@@ -1,0 +1,46 @@
+﻿# Experiment matrix for TriAgent WISE2026 evaluation
+# run_id is used as the top-level results folder: results/<run_id>/
+# Change the date before each new run to avoid overwriting previous results.
+run_id: "full-matrix"
+
+# Ablation study on DeepSeek-chat; local backbones run "full" mode only.
+#
+# host values:
+#   cloud    → cloud API (DeepSeek); up to 4 parallel
+#   local_b  → local GPU (24 GB VRAM), serialized (1 at a time)
+
+jobs:
+  # ── Cloud backbone ───────────────────────────────────────────────────────────
+  - backbone: deepseek-chat
+    provider: deepseek
+    ablation: full
+    host: cloud
+
+  - backbone: deepseek-chat
+    provider: deepseek
+    ablation: no_knowledge
+    host: cloud
+
+  - backbone: deepseek-chat
+    provider: deepseek
+    ablation: no_execution
+    host: cloud
+
+  # ── Local models (serialized: only one GGUF fits in 24 GB at a time) ─────────
+  # Run Qwen first (default in .env), then swap to Gemma4 manually:
+  #   docker compose -f infra/docker-compose.yml stop triagent-llama-cpp-server
+  #   LCPP_MODEL_REPO="unsloth/gemma-4-26B-A4B-it-GGUF:UD-Q4_K_XL" \
+  #   LCPP_ALIAS=gemma4-local LCPP_CTX_SIZE=8192 \
+  #   docker compose -f infra/docker-compose.yml up -d triagent-llama-cpp-server
+
+  - backbone: qwen-local
+    provider: llamacpp_b
+    ablation: full
+    host: local_b
+    lcpp_model_repo: "unsloth/Qwen3.6-27B-MTP-GGUF:UD-Q4_K_XL"
+
+  - backbone: gemma4-local
+    provider: llamacpp_b
+    ablation: full
+    host: local_b
+    lcpp_model_repo: "unsloth/gemma-4-26B-A4B-it-GGUF:UD-Q4_K_XL"

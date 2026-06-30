@@ -1,0 +1,11 @@
+backbone,ablation,process_id,n,diagnosis_ok,substance_ok,dose_ok,tools_ok,gateway_ok,escalation_ok,overall,mean_latency_s,escalation_rate
+deepseek-chat,full,P1,20,1.0,0.0,0.0,0.0,0.8,0.9,0.45,16.1445,0.1
+deepseek-chat,full,P2,20,0.9,0.2,0.65,0.0,0.6,0.55,0.4833,23.5405,0.45
+deepseek-chat,full,P3,20,0.8,0.3,0.0,0.0,0.6,0.4,0.35,20.5765,0.6
+deepseek-chat,full,P4,20,0.8,0.1,0.0,0.0,0.45,0.85,0.3667,25.063,0.15
+deepseek-chat,full,P5,20,0.6,0.2,0.0,0.0,0.25,0.45,0.25,28.2335,0.55
+gemma4-local,full,P1,20,1.0,0.2,0.0,0.0,0.85,0.9,0.4917,46.8615,0.1
+gemma4-local,full,P2,20,0.9,0.15,0.5,0.0,0.65,0.5,0.45,61.2625,0.5
+gemma4-local,full,P3,20,1.0,0.3,0.15,0.0,0.55,0.5,0.4167,65.112,0.5
+gemma4-local,full,P4,20,0.95,0.25,0.25,0.0,0.2,0.95,0.4333,82.1235,0.05
+gemma4-local,full,P5,20,0.95,0.4,0.15,0.0,0.3,0.75,0.425,74.2655,0.25

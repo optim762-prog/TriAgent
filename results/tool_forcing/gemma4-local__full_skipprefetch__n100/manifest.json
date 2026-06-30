@@ -1,0 +1,12 @@
+{
+  "run_id": "d7690c57",
+  "backbone": "gemma4-local",
+  "provider": "llamacpp_b",
+  "ablation": "full",
+  "started_at": "2026-06-14T12:12:15.339605+00:00",
+  "ended_at": "2026-06-14T14:22:59.579777+00:00",
+  "total_processed": 100,
+  "total_failed": 0,
+  "dataset_sha256": "a99a5d8cc4a37db4527a7e45b8348faa41b0d847db73b25f55d45a7d6ef0a8fc",
+  "input_path": "/app/datasets/tool_forcing_instances_n100.jsonl"
+}

@@ -1,0 +1,15 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# install deps first for layer caching
+COPY backend/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY backend/ .
+COPY experiments/ /app/experiments/
+
+ENV PYTHONUNBUFFERED=1
+# the CLI is the default entrypoint; for the FastAPI server override:
+#   docker run ... --entrypoint uvicorn triagent-runner main:app --host 0.0.0.0
+ENTRYPOINT ["python", "-m", "cli"]

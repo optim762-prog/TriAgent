@@ -1,0 +1,13 @@
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# macOS metadata
+.DS_Store
+
+# Environment file (keep template, not actual keys)
+infra/.env
+
+# Dataset builder cache
+datasets/.cache/

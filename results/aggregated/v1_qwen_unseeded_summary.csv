@@ -1,0 +1,4 @@
+backbone,ablation,n,diagnosis_ok,substance_ok,dose_ok,tools_ok,gateway_ok,escalation_ok,overall,mean_latency_s,mean_cost_usd,escalation_rate
+qwen-local,full,100,0.82,0.14,0.15,0.0,0.27,0.72,0.35,70.8891,0.0,0.28
+qwen-local,no_execution,100,0.94,0.22,0.19,0.0,0.33,0.97,0.4417,75.8099,0.0,0.03
+qwen-local,no_knowledge,100,0.92,0.2,0.08,0.0,0.29,0.77,0.3767,27.4198,0.0,0.23

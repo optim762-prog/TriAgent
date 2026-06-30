@@ -1,0 +1,11 @@
+backbone,ablation,process_id,n,diagnosis_ok,substance_ok,dose_ok,tools_ok,gateway_ok,escalation_ok,overall,mean_latency_s,escalation_rate
+gemma4-local,no_execution,P1,20,1.0,0.4,0.1,0.0,0.9,1.0,0.5667,47.163,0.0
+gemma4-local,no_execution,P2,20,0.85,0.2,0.4,0.0,0.6,1.0,0.5083,60.2005,0.0
+gemma4-local,no_execution,P3,20,1.0,0.25,0.2,0.0,0.65,1.0,0.5167,66.939,0.0
+gemma4-local,no_execution,P4,20,0.95,0.15,0.25,0.0,0.35,0.95,0.4417,72.1745,0.05
+gemma4-local,no_execution,P5,20,0.95,0.4,0.2,0.0,0.3,0.95,0.4667,79.4875,0.05
+gemma4-local,no_knowledge,P1,20,1.0,0.4,0.0,0.0,0.5,1.0,0.4833,21.397,0.0
+gemma4-local,no_knowledge,P2,20,0.85,0.15,0.05,0.0,0.4,0.8,0.375,28.4775,0.2
+gemma4-local,no_knowledge,P3,20,1.0,0.1,0.1,0.0,0.35,0.85,0.4,29.726,0.15
+gemma4-local,no_knowledge,P4,20,0.85,0.2,0.1,0.0,0.45,0.75,0.3917,23.228,0.25
+gemma4-local,no_knowledge,P5,20,0.9,0.45,0.15,0.0,0.25,0.65,0.4,26.837,0.35

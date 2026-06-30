@@ -1,0 +1,11 @@
+{
+  "run_id": "aecb6770",
+  "backbone": "gemma4-local",
+  "provider": "llamacpp_b",
+  "ablation": "monolithic",
+  "started_at": "2026-06-15T15:41:13.506982+00:00",
+  "ended_at": "2026-06-15T15:44:28.225236+00:00",
+  "total_processed": 100,
+  "total_failed": 0,
+  "input_path": "/app/datasets/instances.jsonl"
+}

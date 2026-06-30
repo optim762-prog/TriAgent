@@ -1,0 +1,12 @@
+{
+  "run_id": "7028e802",
+  "backbone": "qwen-local",
+  "provider": "llamacpp_b",
+  "ablation": "no_knowledge",
+  "started_at": "2026-06-13T17:57:20.948985+00:00",
+  "ended_at": "2026-06-13T18:39:54.082853+00:00",
+  "total_processed": 100,
+  "total_failed": 0,
+  "dataset_sha256": "3cc39b0f866a81a01071e5b13bfd6d2b139abf1a1f7003c68cffd80d5adaf614",
+  "input_path": "/app/datasets/instances.jsonl"
+}

@@ -1,0 +1,73 @@
+﻿services:
+
+  # ── llama.cpp server (GPU on Machine B, 24 GB VRAM) ──────────────────────────
+  # Uses repo:tag syntax (-hf REPO:TAG) — no -hff needed; tag selects the file.
+  # DEFAULT: Qwen3.6-27B MTP (already downloaded, ctx 16384 ~22 GB total)
+  #
+  # Swap to Gemma4 after Qwen finishes:
+  #   docker compose -f infra/docker-compose.yml stop triagent-llama-cpp-server
+  #   LCPP_MODEL_REPO="unsloth/gemma-4-26B-A4B-it-GGUF:UD-Q4_K_XL" \
+  #   LCPP_ALIAS=gemma4-local LCPP_CTX_SIZE=8192 \
+  #   docker compose -f infra/docker-compose.yml up -d triagent-llama-cpp-server
+  triagent-llama-cpp-server:
+    image: ghcr.io/ggml-org/llama.cpp:server-cuda
+    container_name: triagent-llama-cpp-server
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - HUGGING_FACE_HUB_TOKEN=${HUGGING_FACE_HUB_TOKEN:-}
+    volumes:
+      - hf_cache:/root/.cache/huggingface
+    ports:
+      - "8080:8080"
+    command:
+      - -hf
+      - ${LCPP_MODEL_REPO:-unsloth/Qwen3.6-27B-MTP-GGUF:UD-Q4_K_XL}
+      - -a
+      - ${LCPP_ALIAS:-qwen-local}
+      - -c
+      - "${LCPP_CTX_SIZE:-16384}"
+      - -ngl
+      - "${LCPP_N_GPU_LAYERS:-99}"
+      - -np
+      - "${LCPP_N_PARALLEL:-1}"
+      - --timeout
+      - "${LCPP_TIMEOUT:-1200}"
+      - --cache-ram
+      - "0"
+      - --reasoning
+      - "off"
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8080"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s   # allow time for initial model download on first run
+    restart: unless-stopped
+
+  # ── TriAgent batch runner ─────────────────────────────────────────────────────
+  triagent-runner:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile.backend
+    image: triagent-runner
+    container_name: triagent-runner
+    env_file: .env
+    environment:
+      - LLAMACPP_B_BASE_URL=http://triagent-llama-cpp-server:8080/v1
+    volumes:
+      - ../datasets:/app/datasets
+      - ../results:/app/results
+      - ../data:/app/data        # rules store + fao documents
+    depends_on:
+      triagent-llama-cpp-server:
+        condition: service_healthy
+    # no restart policy: invoke on demand with docker compose run
+
+volumes:
+  hf_cache:
+    name: triagent-hf-cache-b    # named so it survives compose down; won't be deleted accidentally
