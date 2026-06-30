@@ -1,4 +1,4 @@
-﻿# TriAgent — A Three-Layer Multi-Agent Framework for Cognitive Process Automation
+﻿# TriAgent: A three-layer LLM-based agentic framework for web-based process automation
 
 TriAgent decomposes agronomic process automation into three specialized agents:
 **Knowledge** (FAISS-based retrieval of disease-management rules from a CIMMYT PDF),
